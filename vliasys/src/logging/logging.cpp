@@ -23,14 +23,6 @@ void logging::initLogging() {
     spdlog::flush_on(spdlog::level::info);
 }
 
-logging::~logging() {
-    spdlog::shutdown();
-}
-
-logging::logging() {
-
-}
-
 void logging::activeDebugLogging() {
     spdlog::set_level(spdlog::level::debug);
 }

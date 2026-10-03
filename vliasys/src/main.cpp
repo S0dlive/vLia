@@ -5,8 +5,8 @@
 
 
 int main() {
-    logging log;
-    log.initLogging();
+    logging::initLogging();
 
+    
     return 0;
 }

@@ -7,13 +7,10 @@
 #include "spdlog/logger.h"
 
 
-class logging {
-public:
-    logging();
-    ~logging();
-    void initLogging();
-    void activeDebugLogging();
-    void activeInfoLogging();
+struct logging {
+    static void initLogging();
+    static void activeDebugLogging();
+    static void activeInfoLogging();
 };
 
 
