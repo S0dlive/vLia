@@ -8,7 +8,10 @@ set(CMAKE_CXX_STANDARD 20)
 add_executable(vliasys
         src/main.cpp
         src/logging/logging.cpp
-        src/logging/logging.h)
+        src/logging/logging.h
+        src/process/process.cpp
+        src/process/process.h
+        src/process/processresult.h)
 
 include(FetchContent)
 FetchContent_Declare(
