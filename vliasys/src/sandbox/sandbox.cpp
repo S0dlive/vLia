@@ -38,6 +38,12 @@ void appendRootfsArgs(std::vector<std::string>& out) {
     out.emplace_back("/etc");
     out.emplace_back("/etc");
 
+    if (std::filesystem::exists("/run")) {
+        out.emplace_back("--ro-bind");
+        out.emplace_back("/run");
+        out.emplace_back("/run");
+    }
+
     out.emplace_back("--symlink");
     out.emplace_back("usr/lib");
     out.emplace_back("/lib");
@@ -143,6 +149,12 @@ std::vector<std::string> sandbox::buildBwrapArgs(
 }
 
 
+interactiveProcess sandbox::runInteractiveInSandbox(const std::string &executable,
+                                                     const std::vector<std::string> &args) {
+    const auto bwrapArgs = buildBwrapArgs(executable, args);
+    process proc;
+    return proc.startInteractive(config.bwrapBinary, bwrapArgs);
+}
 
 processResult sandbox::runInSandbox(const std::string &executable,
                                     const std::vector<std::string> &args) {

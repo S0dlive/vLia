@@ -16,7 +16,8 @@ public:
 
     processResult runInSandbox(const std::string &executable,
                                const std::vector<std::string> &args);
-
+    interactiveProcess runInteractiveInSandbox(const std::string &executable,
+                                                     const std::vector<std::string> &args);
     [[nodiscard]] std::vector<std::string> buildBwrapArgs(
         const std::string &executable,
         const std::vector<std::string> &args) const;
