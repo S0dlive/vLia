@@ -14,7 +14,10 @@ add_executable(vliasys
         src/process/processresult.h
         src/sandbox/sandbox.cpp
         src/sandbox/sandbox.h
-        src/sandbox/sandboxconfig.h)
+        src/sandbox/sandboxconfig.h
+        src/config/configmanager.cpp
+        src/config/configmanager.h
+        src/config/globalconfig.h)
 
 include(FetchContent)
 FetchContent_Declare(
