@@ -17,7 +17,7 @@ public:
     pid_t getPid();
     processResult runProcess(const std::string& executable, const std::pmr::vector<std::string>& args);
 private:
-    pid_t pid;
+    pid_t p_pid;
 };
 
 

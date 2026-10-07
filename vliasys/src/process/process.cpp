@@ -19,7 +19,7 @@ static std::string readFromFd(int fd) {
     }
     close(fd);
     return output;
-} // C'est un helpeur que j'ai cherché (x
+}
 
 process::process() {
 
@@ -44,6 +44,7 @@ processResult process::runProcess(const std::string &executable, const std::pmr:
     }
 
     pid_t pid = fork();
+    this->p_pid = pid;
     if (pid < 0) {
         spdlog::error("An error occurred while forking the process " + executable);
         close(stdoutpipe[0]); close (stdoutpipe[1]);
@@ -101,6 +102,10 @@ processResult process::runProcess(const std::string &executable, const std::pmr:
         "",
         "unknown error",
     };
+}
+
+pid_t process::getPid() {
+    return this->p_pid;
 }
 
 
