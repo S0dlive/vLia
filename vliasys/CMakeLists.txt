@@ -11,7 +11,10 @@ add_executable(vliasys
         src/logging/logging.h
         src/process/process.cpp
         src/process/process.h
-        src/process/processresult.h)
+        src/process/processresult.h
+        src/sandbox/sandbox.cpp
+        src/sandbox/sandbox.h
+        src/sandbox/sandboxconfig.h)
 
 include(FetchContent)
 FetchContent_Declare(
