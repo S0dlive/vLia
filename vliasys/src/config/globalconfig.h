@@ -7,6 +7,16 @@
 #include <filesystem>
 #include <vector>
 
+#include "../tools/mcpserverspec.h"
+
+struct mcpConfigSpec {
+    std::string name;
+    bool enabled{true};
+    std::string repoUrl;
+    std::string installCmd;
+    std::string executable;
+    std::vector<std::string> args;
+};
 struct globalConfig {
     std::string nodeId;
     std::filesystem::path baseWorkspaceDir;
@@ -15,6 +25,7 @@ struct globalConfig {
     std::vector<std::pair<std::string, std::filesystem::path>> defaultSharedPaths;
     std::string ollamaEndpoint;
     std::string defaultModel;
+    std::vector<mcpServerSpec> mcpServers;
 };
 
 #endif //VLIASYS_GLOBALCONFIG_H

@@ -7,6 +7,9 @@
 #include <spdlog/spdlog.h>
 #include <nlohmann/json.hpp>
 #include "configmanager.h"
+#include "globalconfig.h"
+#include "../tools/mcpserverspec.h"
+
 
 using json = nlohmann::json;
 
@@ -17,7 +20,7 @@ configManager::configManager(std::string defaultModel)
 
 void configManager::load() {
     if (!std::filesystem::exists(m_configPath)) {
-        spdlog::warn("Config file '" +  m_configPath.string() + "' not found, using default fallback settings");
+        spdlog::warn("Config file '" + m_configPath.string() + "' not found, using default fallback settings");
         m_globalConfig.nodeId = "node-default";
         m_globalConfig.baseWorkspaceDir = "./workspaces";
         m_globalConfig.bwrapBinary = "/usr/bin/bwrap";
@@ -54,13 +57,35 @@ void configManager::load() {
             }
         }
 
+        if (j.contains("mcp_servers") && j["mcp_servers"].is_array()) {
+            m_globalConfig.mcpServers.clear();
+            for (const auto& item : j["mcp_servers"]) {
+                mcpServerSpec spec;
+                spec.name = item.value("name", "");
+                spec.repoUrl = item.value("repo", "");
+                spec.installCmd = item.value("install_cmd", "");
+                spec.executable = item.value("executable", "");
+
+                bool enabled = item.value("enabled", true);
+
+                if (item.contains("args") && item["args"].is_array()) {
+                    for (const auto& arg : item["args"]) {
+                        spec.args.push_back(arg.get<std::string>());
+                    }
+                }
+
+                if (!spec.name.empty() && enabled) {
+                    m_globalConfig.mcpServers.push_back(spec);
+                }
+            }
+        }
+
         spdlog::info("Configuration loaded from " + m_configPath.string());
     } catch (const std::exception& e) {
         spdlog::error("Failed to parse config file: " + std::string(e.what()));
         throw;
     }
 }
-
 sandboxConfig configManager::createSandboxConfigForAgent(const std::string& agentId) {
     if (agentId.empty()) {
         throw std::invalid_argument("agentId cannot be empty");
