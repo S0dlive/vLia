@@ -17,7 +17,19 @@ add_executable(vliasys
         src/sandbox/sandboxconfig.h
         src/config/configmanager.cpp
         src/config/configmanager.h
-        src/config/globalconfig.h)
+        src/config/globalconfig.h
+        src/tools/tool.cpp
+        src/tools/tool.h
+        src/tools/toolResult.h
+        src/tools/bashtool.h
+        src/tools/mcpclient.cpp
+        src/tools/mcpclient.h
+        src/tools/toolRegistry.h
+        src/process/interactiveprocess.cpp
+        src/process/interactiveprocess.h
+        src/tools/mcpserverspec.h
+        src/tools/mcpprovisioner.h
+)
 
 include(FetchContent)
 FetchContent_Declare(
