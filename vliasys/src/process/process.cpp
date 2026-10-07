@@ -29,7 +29,7 @@ process::~process() {
 
 }
 
-processResult process::runProcess(const std::string &executable, const std::pmr::vector<std::string> &args) {
+processResult process::runProcess(const std::string &executable, const std::vector<std::string> &args) {
     int stdoutpipe[2];
     int stderrpipe[2];
     if (pipe(stdoutpipe) == -1 || pipe(stderrpipe) == -1) {
