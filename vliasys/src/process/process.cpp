@@ -109,3 +109,37 @@ pid_t process::getPid() {
 }
 
 
+
+interactiveProcess process::startInteractive(const std::string &executable,
+                                              const std::vector<std::string> &args) {
+    int inPipe[2];
+    int outPipe[2];
+
+    if (pipe(inPipe) == -1 || pipe(outPipe) == -1) {
+        throw std::runtime_error("Failed to create pipes for interactive process");
+    }
+
+    pid_t pid = fork();
+    if (pid == 0) {
+        dup2(inPipe[0], STDIN_FILENO);
+        dup2(outPipe[1], STDOUT_FILENO);
+
+        ::close(inPipe[0]); ::close(inPipe[1]);
+        ::close(outPipe[0]); ::close(outPipe[1]);
+
+        std::vector<char*> execArgs;
+        execArgs.push_back(const_cast<char*>(executable.c_str()));
+        for (const auto &arg : args) {
+            execArgs.push_back(const_cast<char*>(arg.c_str()));
+        }
+        execArgs.push_back(nullptr);
+
+        execvp(executable.c_str(), execArgs.data());
+        _exit(127);
+    }
+
+    ::close(inPipe[0]);
+    ::close(outPipe[1]);
+
+    return interactiveProcess{pid, inPipe[1], outPipe[0]};
+}
