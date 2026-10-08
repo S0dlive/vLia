@@ -1,9 +1,11 @@
-cmake_minimum_required(VERSION 4.3)
+cmake_minimum_required(VERSION 3.20)
 project(vliasys)
 
 set(CMAKE_CXX_STANDARD 20)
 
+find_package(CURL REQUIRED)
 
+include_directories(${CURL_INCLUDE_DIRS})
 
 add_executable(vliasys
         src/main.cpp
@@ -29,6 +31,9 @@ add_executable(vliasys
         src/process/interactiveprocess.h
         src/tools/mcpserverspec.h
         src/tools/mcpprovisioner.h
+        src/runtime/ollamaclient.h
+        src/runtime/agentruntime.h
+        src/tools/mcptool.h
 )
 
 include(FetchContent)
@@ -39,4 +44,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(spdlog)
 
-target_link_libraries(vliasys PUBLIC spdlog::spdlog)
+target_link_libraries(vliasys PUBLIC
+        spdlog::spdlog
+        ${CURL_LIBRARIES}
+)

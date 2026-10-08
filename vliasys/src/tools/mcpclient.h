@@ -14,7 +14,6 @@ using json = nlohmann::json;
 class mcpClient {
 public:
     mcpClient(sandbox& box, const std::string& mcpExecutable, const std::vector<std::string>& args) {
-        // Lancement du serveur MCP (Python / Node) à l'intérieur de bwrap
         m_proc = box.runInteractiveInSandbox(mcpExecutable, args);
     }
 

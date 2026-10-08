@@ -15,8 +15,15 @@ public:
     static bool ensureServerInstalled(const sandboxConfig& baseConfig, const mcpServerSpec& spec) {
         std::filesystem::path targetDir = baseConfig.workspacePath / "mcp_servers" / spec.name;
 
+
+
         if (std::filesystem::exists(targetDir)) {
             spdlog::info("MCP Server '"+ spec.name + "' already installed in " +  targetDir.string());
+            return true;
+        }
+
+        if (spec.repoUrl.empty()) {
+            spdlog::info("MCP Server '"+ spec.name + "' est un serveur local, aucun clone Git requis.");
             return true;
         }
 
