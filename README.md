@@ -1,18 +1,24 @@
 # vLia
-vLia is an open-source framework designed to run, isolate, and interconnect autonomous AI agents. The project focuses on security, modularity, and lightweight local execution.
 
-⚠️ Status: Work in Progress (Alpha). Core runtime under active development.
+vLia is an open-source framework designed to run, isolate, and interconnect autonomous AI agents via P2P. The project focuses on security, modularity, and lightweight background system execution on Linux.
 
-## 🏗️ Architecture Overview
-The project is structured around three main components:
+Status: Active Alpha. Core runtime, P2P network daemon, systemd integration, and installer operational.
 
-vliasys: The core C++20 runtime handling agent lifecycles, Bubblewrap (bwrap) sandboxing, local Ollama LLM execution, and Model Context Protocol (MCP) tool integration.
+## Architecture Overview
 
-vlianet: The upcoming networking layer designed for P2P agent collaboration, consensus, and reputation management.
+The system runs via background systemd services and a centralized management CLI:
 
-vLia Client: The CLI/Desktop user interface to control agents and interact with local or remote runtime nodes.
+- **vliasys**: C++20 core runtime managing agent lifecycles, Bubblewrap (bwrap) sandboxing, local Ollama LLM execution, MCP tool integration, and UNIX socket IPC.
+- **vlianet**: Rust daemon powered by `libp2p` handling P2P discovery (Kademlia DHT), Gossipsub messaging, and consensus across nodes.
+- **vlia**: System CLI to deploy, monitor, and manage configurations and services in real-time.
 
-## 📋 Roadmap & Todo List
+```text
+/etc/vlia/
+├── vliasys.json         # Ollama model & IPC socket settings
+└── vlianet.env          # Port & identity configuration
+``` 
+
+## Features & Roadmap
 ### Core Runtime (vliasys)
 [x] POSIX process management & Bubblewrap (bwrap) sandboxing
 
@@ -20,42 +26,53 @@ vLia Client: The CLI/Desktop user interface to control agents and interact with 
 
 [x] Ollama ReAct execution loop via libcurl
 
-[ ] Fix edge-case JSON-RPC STDIO buffer parsing & stderr leaks
+[x] UNIX socket IPC API server
+
+[x] Auto-generated agent identity and dynamic configuration persistence
 
 [ ] Add persistent memory system (local vector database / RAG)
 
-[ ] Expose an IPC API (gRPC / UNIX Sockets) for client communication
-
 ### Networking Layer (vlianet)
-[ ] Design P2P protocol for agent-to-agent task delegation
+[x] P2P node identity & libp2p Swarm setup
+
+[x] Gossipsub consensus topic subscription
+
+[x] IPC bridge to vliasys for remote job execution
 
 [ ] Implement node reputation and trust-scoring mechanism
 
-[ ] Define consensus rules for distributed agent responses
+[ ] Advanced distributed consensus rules
 
-### Client & Interface
-[ ] Build the lightweight CLI client
+### System & CLI (vlia)
+[x] Automated systemd unit integration
 
-[ ] Implement real-time log streaming for sandboxed execution
+[x] Single-command interactive installer (install.sh)
 
-[ ] Add session management and multi-node connection handling
+[x] Integrated control CLI (vlia status, vlia restart, vlia logs)
 
-## 🚀 Quickstart
-Prerequisites
-- C++20 compiler (gcc or clang)
+## Prerequisites
+- Linux systemd distribution (Fedora, Debian, Ubuntu, Arch)
+- C++20 compiler (gcc >= 10 or clang >= 12) & CMake >= 3.20
+- Rust toolchain (cargo / rustup)
+- Bubblewrap (bwrap), libcurl, spdlog
+- Ollama running locally (http://127.0.0.1:11434)
 
-- CMake >= 3.20
+## Installation & Quickstart
+Clone the repository and run the automated installer:
+```bash
+git clone [https://github.com/S0dlive/vLia.git](https://github.com/S0dlive/vLia.git)
+cd vLia
+chmod +x install.sh
+sudo ./install.sh
+```
+The installer automatically detects local Ollama models, compiles both vliasys and vlianet, creates system configuration files in /etc/vlia/, and registers systemd daemons.
 
-- bubblewrap
-
-- libcurl
-
-- Ollama running locally ([http://127.0.0.1:11434](http://127.0.0.1:11434))
-
-Build
-```sh
-mkdir build && cd build
-cmake ..
-make
-./vliasys
-``` 
+## CLI Usage
+Manage background services using the unified vlia command:
+```bash
+vlia status                # Check status of vliasys and vlianet
+vlia logs                  # Stream combined logs in real-time
+vlia restart               # Restart both daemons
+vlia off-vliasys           # Stop only the local runtime
+vlia config                # Edit runtime JSON configuration
+```
