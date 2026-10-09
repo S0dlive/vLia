@@ -34,6 +34,8 @@ add_executable(vliasys
         src/runtime/ollamaclient.h
         src/runtime/agentruntime.h
         src/tools/mcptool.h
+        src/ipc/ipcserver.cpp
+        src/ipc/ipcserver.h
 )
 
 include(FetchContent)
